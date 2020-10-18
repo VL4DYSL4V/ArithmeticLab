@@ -1,4 +1,5 @@
 #include "Karazuba.h"
+#include "Utils.h"
 #include<string>
 #include<iostream>
 
@@ -30,21 +31,19 @@ BigInteger Karazuba::multiply(BigInteger x, BigInteger y) {
             valueY.find_first_not_of('0') == std::string::npos){
         return BigInteger("0");
     }
-    if (valueX.length() == 1 && valueY.length() == 1) {
-        return naiveMultiplying(x, y);
-    } else if (valueX.length() == 2 && valueY.length() == 2) {
-        return naiveMultiplying(x, y);
+    if ((valueX.length() == 1 || valueX.length() == 2) 
+            && (valueY.length() == 1 || valueY.length() == 2)) {
+        return Utils::naiveMultiplying(x, y);
     }
-    equalize(valueX, valueY);
-    makeLengthMultipleOfTwo(valueX);
-    makeLengthMultipleOfTwo(valueY);
+    Utils::equalize(valueX, valueY);
+    Utils::makeLengthMultiple(valueX, 2);
+    Utils::makeLengthMultiple(valueY, 2);
     int exponent = std::max(valueX.length(), valueY.length());
-    BigInteger leftX(getHalf(valueX, 1));
-    BigInteger rightX(getHalf(valueX, 2));
-    BigInteger leftY(getHalf(valueY, 1));
-    BigInteger rightY(getHalf(valueY, 2));
-//    std::cout << leftX.toString() << "\t|\t" << rightX.toString() << std::endl;
-//    std::cout << leftY.toString() << "\t|\t" << rightY.toString() << std::endl;
+    BigInteger leftX(Utils::getPart(valueX, 0, valueX.length()/2));
+    BigInteger rightX(Utils::getPart(valueX, 1, valueX.length()/2));
+    BigInteger leftY(Utils::getPart(valueY, 0, valueY.length()/2));
+    BigInteger rightY(Utils::getPart(valueY, 1, valueY.length()/2));\
+
     BigInteger p1 = multiply(leftX, leftY);
     BigInteger p2 = multiply(rightX, rightY);
     BigInteger p3 = multiply(leftX + rightX, leftY + rightY);
@@ -52,47 +51,8 @@ BigInteger Karazuba::multiply(BigInteger x, BigInteger y) {
     BigInteger middle = p3 - p1 - p2;
     BigInteger result = p1.multiplyByTenInExponent(exponent)
             + middle.multiplyByTenInExponent(exponent / 2) + p2;
+    bool isNegative = (x.isNegative() && !y.isNegative()) || (!x.isNegative() && y.isNegative());
+    result.setNegative(isNegative);
     return result;
-
-}
-
-void Karazuba::equalize(std::string &valueX, std::string &valueY) {
-    if (valueX.size() == valueY.size()) {
-        return;
-    } else if (valueX.size() < valueY.size()) {
-        do {
-            valueX.insert(0, "0");
-        } while (valueX.size() < valueY.size());
-    } else if (valueX.size() > valueY.size()) {
-        do {
-            valueY.insert(0, "0");
-        } while (valueX.size() > valueY.size());
-    }
-}
-
-void Karazuba::makeLengthMultipleOfTwo(std::string& s) {
-    if (s.length() % 2 == 0) {
-        return;
-    }
-    s.insert(0, "0");
-}
-
-BigInteger Karazuba::naiveMultiplying(BigInteger x, BigInteger y) {
-    std::string res = std::to_string(std::stoi(x.getUnsignedValue()) * std::stoi(y.getUnsignedValue()));
-    BigInteger out(res);
-    return out;
-}
-
-std::string Karazuba::getHalf(std::string s, int whichHalf) {
-    if (s.length() == 1) {
-        return s;
-    }
-    switch (whichHalf) {
-        case 1:
-            return s.substr(0, s.length() / 2);
-        case 2:
-            return s.substr(s.length() / 2);
-    }
-    return s;
 }
 
