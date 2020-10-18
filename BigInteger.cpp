@@ -216,6 +216,17 @@ BigInteger BigInteger::multiplyByTenInExponent(int exponent) {
     return out;
 }
 
+std::string BigInteger::toBinaryString() {
+    std::string out = "";
+    return out;
+}
+
+BigInteger BigInteger::of(std::string binaryValue) {
+
+    BigInteger out("0");
+    return out;
+}
+
 std::string BigInteger::getUnsignedValue() {
     std::string out = std::string(this->value);
 

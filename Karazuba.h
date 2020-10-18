@@ -11,10 +11,7 @@ public:
     virtual ~Karazuba();
     BigInteger multiply(BigInteger x, BigInteger y);
 private:
-    BigInteger naiveMultiplying(BigInteger x, BigInteger y);
-    void equalize(std::string &valueX, std::string &valueY);
-    void makeLengthMultipleOfTwo(std::string &s);
-    std::string getHalf(std::string s, int whichHalf);
+    
 };
 
 #endif /* KARAZUBA_H */

@@ -11,6 +11,8 @@ public:
     BigInteger operator-(BigInteger another);
     BigInteger multiplyByTenInExponent(int exponent);
     int compareTo(BigInteger another);
+    std::string toBinaryString();
+    BigInteger of(std::string binaryValue);
     
     void setNegative(bool isNegative);
     bool isNegative();
