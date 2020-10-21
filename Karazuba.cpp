@@ -1,5 +1,6 @@
 #include "Karazuba.h"
 #include "Utils.h"
+#include "Modular.h"
 #include<string>
 #include<iostream>
 
@@ -42,15 +43,25 @@ BigInteger Karazuba::multiply(BigInteger x, BigInteger y) {
     BigInteger leftX(Utils::getPart(valueX, 0, valueX.length()/2));
     BigInteger rightX(Utils::getPart(valueX, 1, valueX.length()/2));
     BigInteger leftY(Utils::getPart(valueY, 0, valueY.length()/2));
-    BigInteger rightY(Utils::getPart(valueY, 1, valueY.length()/2));\
+    BigInteger rightY(Utils::getPart(valueY, 1, valueY.length()/2));
 
-    BigInteger p1 = multiply(leftX, leftY);
-    BigInteger p2 = multiply(rightX, rightY);
-    BigInteger p3 = multiply(leftX + rightX, leftY + rightY);
-
+//    BigInteger p1 = multiply(leftX, leftY);
+//    BigInteger p2 = multiply(rightX, rightY);
+//    BigInteger p3 = multiply(leftX + rightX, leftY + rightY);
+//    std::cout<<"p1 = "<<p1.toString()<<std::endl;
+//    std::cout<<"p2 = "<<p2.toString()<<std::endl;
+//    std::cout<<"p3 = "<<p3.toString()<<std::endl;
+//    BigInteger middle = p3 - p1 - p2;
+//    BigInteger result = Utils::multiplyByTenInExponent(p1, exponent)
+//            + Utils::multiplyByTenInExponent(middle, exponent / 2) + p2;
+    Modular modular;
+    BigInteger p1 = modular.multiply(leftX, leftY);
+    BigInteger p2 = modular.multiply(rightX, rightY);
+    BigInteger p3 = modular.multiply(leftX + rightX, leftY + rightY);
     BigInteger middle = p3 - p1 - p2;
-    BigInteger result = p1.multiplyByTenInExponent(exponent)
-            + middle.multiplyByTenInExponent(exponent / 2) + p2;
+    BigInteger result = Utils::multiplyByTenInExponent(p1, exponent)
+            + Utils::multiplyByTenInExponent(middle, exponent / 2) + p2;
+
     bool isNegative = (x.isNegative() && !y.isNegative()) || (!x.isNegative() && y.isNegative());
     result.setNegative(isNegative);
     return result;

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include "BigInteger.h"
+#include "Utils.h"
+#include "Karazuba.h"
 
 BigInteger::BigInteger(std::string value) {
     std::string prefix("-");
@@ -206,24 +208,38 @@ std::string BigInteger::getDifferResult(std::string lowerModuloNumber,
     return res;
 }
 
-BigInteger BigInteger::multiplyByTenInExponent(int exponent) {
-    std::string result = std::string(value);
-    for (int i = 0; i < exponent; i++) {
-        result.append("0");
-    }
-    BigInteger out(result);
-
-    return out;
-}
-
 std::string BigInteger::toBinaryString() {
     std::string out = "";
+    std::string val = std::string(value);
+    BigInteger divisionResult(this->value);
+    BigInteger two("2");
+    bool firstTimeDivisionByOne = true;
+    while(val != "0" && firstTimeDivisionByOne){
+        if(val == "1"){
+            firstTimeDivisionByOne = false;
+        }
+        if((val[val.length() - 1] -'0') % 2 == 0){
+            out.insert(0, "0");
+        }else{
+            out.insert(0, "1");
+        }
+        divisionResult = Utils::naiveDivision(divisionResult, two);
+        val = divisionResult.value;
+    }  
     return out;
 }
 
 BigInteger BigInteger::of(std::string binaryValue) {
-
     BigInteger out("0");
+    BigInteger two("2");
+    for(int i = binaryValue.length() - 1; i >= 0; i--){
+        std::string bit = binaryValue.substr(i, 1);
+        if(bit == "0"){
+            continue;
+        }
+        BigInteger result = Utils::pow(two, binaryValue.length() - 1 - i);
+        out = out + result;
+    }    
     return out;
 }
 
@@ -249,3 +265,4 @@ std::string BigInteger::toString() {
     }
     return out;
 }
+
