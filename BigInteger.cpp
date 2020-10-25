@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "BigInteger.h"
-#include "Utils.h"
+#include "BigIntegerUtils.h"
 #include "Karazuba.h"
 
 BigInteger::BigInteger(std::string value) {
@@ -22,6 +22,14 @@ BigInteger::BigInteger(const BigInteger& orig) {
 }
 
 BigInteger::~BigInteger() {
+}
+
+BigInteger BigInteger::one() {
+    return BigInteger("1");
+}
+
+BigInteger BigInteger::zero() {
+    return BigInteger("0");
 }
 
 BigInteger BigInteger::operator+(BigInteger another) {
@@ -223,10 +231,22 @@ std::string BigInteger::toBinaryString() {
         }else{
             out.insert(0, "1");
         }
-        divisionResult = Utils::naiveDivision(divisionResult, two);
+        divisionResult = BigIntegerUtils::naiveDivision(divisionResult, two);
         val = divisionResult.value;
-    }  
+    }
+    makeLengthOfBinaryAppropriate(out);
     return out;
+}
+
+void BigInteger::makeLengthOfBinaryAppropriate(std::string &binaryValueOfPositiveinteger) {
+    unsigned long approppriateLength = 8;
+    while(binaryValueOfPositiveinteger.length() > approppriateLength){
+        approppriateLength *= 2;
+    }
+    if(approppriateLength == binaryValueOfPositiveinteger.length() && binaryValueOfPositiveinteger[0] == '1'){
+        approppriateLength *= 2;
+    }
+    binaryValueOfPositiveinteger.insert(0, approppriateLength - binaryValueOfPositiveinteger.length(), '0');
 }
 
 BigInteger BigInteger::of(std::string binaryValue) {
@@ -237,7 +257,7 @@ BigInteger BigInteger::of(std::string binaryValue) {
         if(bit == "0"){
             continue;
         }
-        BigInteger result = Utils::pow(two, binaryValue.length() - 1 - i);
+        BigInteger result = BigIntegerUtils::pow(two, binaryValue.length() - 1 - i);
         out = out + result;
     }    
     return out;

@@ -5,11 +5,11 @@
 #include <vector>
 #include "BigInteger.h"
 
-class Utils {
+class BigIntegerUtils {
 public:
-    Utils();
-    Utils(const Utils& orig);
-    virtual ~Utils();
+    BigIntegerUtils();
+    BigIntegerUtils(const BigIntegerUtils& orig);
+    virtual ~BigIntegerUtils();
 
     static void makeLengthMultiple(std::string &s, int multipleOfWhat);
     static std::string getPart(std::string s, int indexOfPart, int lengthOfPart);
@@ -18,17 +18,19 @@ public:
     static BigInteger naiveMultiplying(BigInteger x, BigInteger y);
     static BigInteger naiveDivision(BigInteger x, BigInteger divisor);
     static BigInteger pow(BigInteger bigInteger, int exponent);
+    static BigInteger pow(BigInteger bigInteger, BigInteger exponent);
     static BigInteger multiplyByTenInExponent(BigInteger x, int exponent);
     static BigInteger naiveMod(BigInteger x, BigInteger divisor);
     static std::vector<std::string> splitIntoDigits(BigInteger x);  
     static void insertZerosToEqualize(std::vector<std::string> &x, std::vector<std::string> &y, bool insertInStart);
-    
+    static BigInteger getRandom(BigInteger positiveUpperBound);
+    static void removeZerosInStart(std::string &s);
 private:
     static BigInteger getDivisionResult(BigInteger x, BigInteger divisor);
     static BigInteger divideBySingleDigit(BigInteger x, BigInteger divisor);
     static BigInteger divideByNotSingleDigit(BigInteger x, BigInteger divisor);
     static BigInteger searchByBruteForce(BigInteger x, BigInteger divisor);
-    static void removeZerosInStart(std::string &s);
+
 };
 
 #endif /* UTILS_H */
