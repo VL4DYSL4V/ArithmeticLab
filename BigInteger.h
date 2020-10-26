@@ -6,6 +6,9 @@ public:
     BigInteger(std::string value);
     BigInteger(const BigInteger& orig);
     virtual ~BigInteger();
+
+    static BigInteger one();
+    static BigInteger zero();
     
     BigInteger operator+(BigInteger another);
     BigInteger operator-(BigInteger another);
@@ -21,9 +24,10 @@ public:
 private:
     std::string value = "0";
     bool isNegativeNumber = false;
-    
+
     std::string getAddingResult(std::string lowerModuloNumber, std::string higherModuloNumber);
     std::string getDifferResult(std::string lowerModuloNumber, std::string higherModuloNumber);
+    void makeLengthOfBinaryAppropriate(std::string &binaryValueOfPositiveinteger);
 };
 
 #endif /* BIGINTEGER_H */

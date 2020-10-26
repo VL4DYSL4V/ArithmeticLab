@@ -1,13 +1,13 @@
 #include "Karazuba.h"
-#include "Utils.h"
-#include "Modular.h"
+#include "BigIntegerUtils.h"
+#include "Shtrassen.h"
 #include<string>
 #include<iostream>
 
 Karazuba::Karazuba() {
 }
 
-Karazuba::Karazuba(const Karazuba& orig) {
+Karazuba::Karazuba(const Karazuba &orig) {
 }
 
 Karazuba::~Karazuba() {
@@ -28,22 +28,31 @@ Karazuba::~Karazuba() {
 BigInteger Karazuba::multiply(BigInteger x, BigInteger y) {
     std::string valueX = x.getUnsignedValue();
     std::string valueY = y.getUnsignedValue();
-    if(valueX.find_first_not_of('0') == std::string::npos || 
-            valueY.find_first_not_of('0') == std::string::npos){
+    if (valueX.find_first_not_of('0') == std::string::npos ||
+        valueY.find_first_not_of('0') == std::string::npos) {
         return BigInteger("0");
     }
-    if ((valueX.length() == 1 || valueX.length() == 2) 
-            && (valueY.length() == 1 || valueY.length() == 2)) {
-        return Utils::naiveMultiplying(x, y);
+    if ((valueX.length() == 1 || valueX.length() == 2)
+        && (valueY.length() == 1 || valueY.length() == 2)) {
+        return BigIntegerUtils::naiveMultiplying(x, y);
     }
-    Utils::equalize(valueX, valueY);
-    Utils::makeLengthMultiple(valueX, 2);
-    Utils::makeLengthMultiple(valueY, 2);
+    BigIntegerUtils::equalize(valueX, valueY);
+    BigIntegerUtils::makeLengthMultiple(valueX, 2);
+    BigIntegerUtils::makeLengthMultiple(valueY, 2);
     int exponent = std::max(valueX.length(), valueY.length());
-    BigInteger leftX(Utils::getPart(valueX, 0, valueX.length()/2));
-    BigInteger rightX(Utils::getPart(valueX, 1, valueX.length()/2));
-    BigInteger leftY(Utils::getPart(valueY, 0, valueY.length()/2));
-    BigInteger rightY(Utils::getPart(valueY, 1, valueY.length()/2));
+
+    std::string x_l = BigIntegerUtils::getPart(valueX, 0, valueX.length() / 2);
+    std::string x_r = BigIntegerUtils::getPart(valueX, 1, valueX.length() / 2);
+    std::string y_l = BigIntegerUtils::getPart(valueY, 0, valueY.length() / 2);
+    std::string y_r = BigIntegerUtils::getPart(valueY, 1, valueY.length() / 2);
+    BigIntegerUtils::removeZerosInStart(x_l);
+    BigIntegerUtils::removeZerosInStart(x_r);
+    BigIntegerUtils::removeZerosInStart(y_l);
+    BigIntegerUtils::removeZerosInStart(y_r);
+    BigInteger leftX(x_l);
+    BigInteger rightX(x_r);
+    BigInteger leftY(y_l);
+    BigInteger rightY(y_r);
 
 //    BigInteger p1 = multiply(leftX, leftY);
 //    BigInteger p2 = multiply(rightX, rightY);
@@ -52,16 +61,27 @@ BigInteger Karazuba::multiply(BigInteger x, BigInteger y) {
 //    std::cout<<"p2 = "<<p2.toString()<<std::endl;
 //    std::cout<<"p3 = "<<p3.toString()<<std::endl;
 //    BigInteger middle = p3 - p1 - p2;
-//    BigInteger result = Utils::multiplyByTenInExponent(p1, exponent)
-//            + Utils::multiplyByTenInExponent(middle, exponent / 2) + p2;
-    Modular modular;
+//    BigInteger result = BigIntegerUtils::multiplyByTenInExponent(p1, exponent)
+//            + BigIntegerUtils::multiplyByTenInExponent(middle, exponent / 2) + p2;
+
+    Shtrassen modular;
     BigInteger p1 = modular.multiply(leftX, leftY);
     BigInteger p2 = modular.multiply(rightX, rightY);
     BigInteger p3 = modular.multiply(leftX + rightX, leftY + rightY);
-    BigInteger middle = p3 - p1 - p2;
-    BigInteger result = Utils::multiplyByTenInExponent(p1, exponent)
-            + Utils::multiplyByTenInExponent(middle, exponent / 2) + p2;
 
+    BigInteger middle = p3 - p1 - p2;
+    BigInteger result = BigIntegerUtils::multiplyByTenInExponent(p1, exponent)
+                        + BigIntegerUtils::multiplyByTenInExponent(middle, exponent / 2) + p2;
+//    std::cout << "left x = " << leftX.toString() << std::endl;
+//    std::cout << "left y = " << leftY.toString() << std::endl;
+//    std::cout << "right x = " << rightX.toString() << std::endl;
+//    std::cout << "right y = " << rightY.toString() << std::endl;
+//    std::cout << "p1 = " << p1.toString() << std::endl;
+//    std::cout << "p2 = " << p2.toString() << std::endl;
+//    std::cout << "p3 = " << p3.toString() << std::endl;
+//    std::cout << "middle = " << middle.toString() << std::endl;
+//    std::cout << "exp = "<< exponent<< std::endl;
+//    std::cout << "result = "<<result.toString()<< std::endl;
     bool isNegative = (x.isNegative() && !y.isNegative()) || (!x.isNegative() && y.isNegative());
     result.setNegative(isNegative);
     return result;
