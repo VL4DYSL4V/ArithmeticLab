@@ -4,22 +4,8 @@
 #include "math.h"
 
 
-double InverseKuk::getInverse(int number) {
-    if (number == 0) {
-        return 0;
-    } else if (number < 5000) {
-        return 1 / double(number);
-    }
-    int multiplyer = 1;
-    double v = double(number);
-    while (v > 1.0) {
-        multiplyer *= 10;
-        v /= 10;
-    }
-//    std::cout << "v = " << v << std::endl;
-    std::string binary = getBinaryValueOfFractionalPart(v);
-//    std::cout << "binary = " << binary << std::endl;
-//    std::cout << "restored = " << doubleOf(binary) << std::endl;
+double InverseKuk::getInverse(double number) {
+    std::string binary = getBinaryValueOfFractionalPart(number);
     std::vector<int> vectorV = getV(binary);
     int v1 = vectorV[0];
     int v2 = vectorV[1];
@@ -45,7 +31,7 @@ double InverseKuk::getInverse(int number) {
         }
 //        std::cout <<"z = "<< z << std::endl;
     }
-    return z / multiplyer;
+    return z;
 }
 
 std::string InverseKuk::getBinaryValueOfFractionalPart(double n) {

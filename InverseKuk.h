@@ -7,7 +7,7 @@
 class InverseKuk {
 
 public:
-    double getInverse(int number);
+    double getInverse(double number);
 
 private:
     std::string getBinaryValueOfFractionalPart(double number);

@@ -4,7 +4,7 @@
 
 class DivisionKuk {
 public:
-    double divide(int x, int divisor);
+    double divide(int x, double divisor);
 };
 
 

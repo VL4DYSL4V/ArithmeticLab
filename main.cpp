@@ -1,10 +1,7 @@
-#include <cstdlib>
 #include <iostream>
-#include <vector>
 
 #include "Karazuba.h"
 #include "ToomKuk.h"
-#include "BigIntegerUtils.h"
 #include "Shtrassen.h"
 #include "InverseKuk.h"
 #include "FactorDicson.h"
@@ -92,6 +89,8 @@ void app() {
     }
 }
 
+//TODO: FIX MENU: divisionKuk changes signature to (int, double). So I need to collapse IntUtils
+// with method doubleOf (and rename it to NumberUtils)
 int main(int argc, char **argv) {
     app();
     return 0;
